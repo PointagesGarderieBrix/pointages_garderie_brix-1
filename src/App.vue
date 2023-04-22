@@ -12,7 +12,7 @@
 </template>
 
 <script lang="ts" setup>
-import { darkTheme, NConfigProvider, NLayout, NLayoutContent, NLayoutHeader, frFR, dateFrFR } from 'naive-ui'
+import { darkTheme, NConfigProvider, NLayout, NLayoutHeader, frFR, dateFrFR } from 'naive-ui'
 import useStore from './stores/store';
 import Login from './pages/Login.vue';
 import Header from './Components/Header.vue';
