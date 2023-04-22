@@ -11,13 +11,16 @@
 			</n-input-group>
 		</n-card>
 		<n-card title="Ajouter un pointage">
-			<n-input-group>
-				<n-select :clearable="true" style="width:200px" v-model:value="selectedKid" :options="kidOptions">
+			<div style="display:grid;max-width: 300px;place-items: center;margin:auto">
+				<n-select :clearable="true" v-model:value="selectedKid" :options="kidOptions">
 				</n-select>
-				<n-time-picker placeholder="Arrivée" v-model:value="start" :hours="hours" :minutes="15" format="HH:mm" />
-				<n-time-picker placeholder="Départ" v-model:value="end" :hours="hours" :minutes="15" format="HH:mm" />
-				<n-button @click="savePointage" :disabled="!selectedKid || !start">Ok</n-button>
-			</n-input-group>
+				<n-input-group>
+					<n-time-picker placeholder="Arrivée" v-model:value="start" :hours="hours" :minutes="15"
+						format="HH:mm" />
+					<n-time-picker placeholder="Départ" v-model:value="end" :hours="hours" :minutes="15" format="HH:mm" />
+					<n-button @click="savePointage" :disabled="!selectedKid || !start">Ok</n-button>
+				</n-input-group>
+			</div>
 		</n-card>
 		<n-table :bordered="false" :single-line="false">
 			<thead>
@@ -32,7 +35,7 @@
 			</thead>
 			<tbody>
 				<tr
-					v-for="pointage in                                                                                                                                         list                                                                                                                                        ">
+					v-for="pointage in                                                                                                                                                 list                                                                                                                                                ">
 					<td>{{ pointage.name }}</td>
 					<td>{{ pointage.start }}</td>
 					<td v-if="pointage.end">{{ pointage.end }}</td>
