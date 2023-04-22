@@ -26,16 +26,16 @@
 			<thead>
 				<tr>
 
-					<th style="width:100px">Enfant</th>
-					<th style="width:50px">Arrivée</th>
+					<th>Enfant</th>
+					<th style="width:1%">Arrivée</th>
 					<th style="width:100px">Départ</th>
-					<th style="width:50px">Durée</th>
-					<th style="width:20px" size="small"></th>
+					<th style="width:1%">Durée</th>
+					<th style="width:1%" size="small"></th>
 				</tr>
 			</thead>
 			<tbody>
 				<tr
-					v-for="pointage in                                                                                                                                                                    list                                                                                                                                                                   ">
+					v-for="pointage in                                                                                                                                                                              list                                                                                                                                                                             ">
 					<td>{{ pointage.name }}</td>
 					<td>{{ pointage.start }}</td>
 					<td v-if="pointage.end">{{ pointage.end }}</td>
