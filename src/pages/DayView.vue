@@ -3,7 +3,7 @@
 		<n-card>
 			<n-input-group>
 				<n-button @click="changeDay(-1)">-</n-button>
-				<n-date-picker v-model:value="day" type="date" />
+				<n-date-picker style="max-width: 130px;" v-model:value="day" type="date" />
 				<n-button @click="changeDay(1)" style="margin-right:auto">+</n-button>
 				<n-button :type="morning ? 'primary' : 'default'" @click="morning = true">Matin</n-button>
 				<n-button :type="!morning ? 'primary' : 'default'" @click="morning = false">Après-Midi</n-button>
@@ -35,7 +35,7 @@
 			</thead>
 			<tbody>
 				<tr
-					v-for="pointage in                                                                                                                                                 list                                                                                                                                                ">
+					v-for="pointage in                                                                                                                                                   list                                                                                                                                                  ">
 					<td>{{ pointage.name }}</td>
 					<td>{{ pointage.start }}</td>
 					<td v-if="pointage.end">{{ pointage.end }}</td>
