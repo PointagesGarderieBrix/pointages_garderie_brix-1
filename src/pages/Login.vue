@@ -1,7 +1,9 @@
 
 <template>
-	<n-input v-model:value="password" />
-	<n-button @click="checkPassword">Se connecter</n-button>
+	<div style="display:grid;place-items: center;margin-top:200px;">
+		<n-input v-model:value="password" type="password" style="max-width:200px" show-password-on="click" />
+		<n-button @click="checkPassword">Se connecter</n-button>
+	</div>
 </template>
 
 <script setup lang="ts">
