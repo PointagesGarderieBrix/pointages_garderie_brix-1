@@ -11,6 +11,8 @@ export default defineConfig({
       injectRegister: 'auto',
       includeAssets: ['favicon.ico', 'apple-touch-icon.png', 'masked-icon.svg'],
       manifest: {
+        start_url: 'index.html?fullscreen=true',
+        display: 'fullscreen',
         name: 'Pointages garderie',
         short_name: 'Pointages garderie',
         description: 'Pointages garderie',
@@ -24,7 +26,8 @@ export default defineConfig({
           {
             src: 'pwa-512x512.png',
             sizes: '512x512',
-            type: 'image/png'
+            type: 'image/png',
+            purpose: 'any'
           }
         ]
       },
@@ -33,6 +36,9 @@ export default defineConfig({
       }
     })
   ],
+  build: {
+    target: 'esnext',
+  },
   base: '/',
 
 })
