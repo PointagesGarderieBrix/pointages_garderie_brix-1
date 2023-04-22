@@ -7,6 +7,8 @@ export default defineConfig({
   plugins: [
     vue(),
     VitePWA({
+      registerType: 'autoUpdate',
+      injectRegister: 'auto',
       includeAssets: ['favicon.ico', 'apple-touch-icon.png', 'masked-icon.svg'],
       manifest: {
         name: 'Pointages garderie',
