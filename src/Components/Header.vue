@@ -19,7 +19,6 @@
 			Export
 		</n-button>
 		<n-button quaternary style="margin-left:auto" @click="store.auth.signOut()">
-			Déconnexion
 			<template #icon>
 				<sign-out-alt></sign-out-alt>
 			</template>
