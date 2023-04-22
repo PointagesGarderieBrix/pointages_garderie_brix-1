@@ -4,10 +4,8 @@
       <n-layout-header>
         <Header></Header>
       </n-layout-header>
-      <n-layout-content>
-        <router-view></router-view>
+      <router-view></router-view>
 
-      </n-layout-content>
     </n-layout>
     <Login v-else></Login>
   </n-config-provider>
