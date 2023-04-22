@@ -7,4 +7,5 @@ export interface Pointage {
 	Arrivée: number
 	Départ?: number
 	Jour: { seconds: number }
+	Commentaire?: string
 }

@@ -14,6 +14,7 @@
 			<div style="display:grid;max-width: 300px;place-items: center;margin:auto">
 				<n-select :clearable="true" v-model:value="selectedKid" :options="kidOptions">
 				</n-select>
+				<n-input v-model:value="comment" placeholder="Commentaire"></n-input>
 				<n-input-group>
 					<n-time-picker placeholder="Arrivée" v-model:value="start" :hours="hours" :minutes="15"
 						format="HH:mm" />
@@ -34,8 +35,11 @@
 				</tr>
 			</thead>
 			<tbody>
-				<tr v-for="pointage in     list     ">
-					<td>{{ pointage.name }}</td>
+				<tr v-for="pointage of                   list                  ">
+					<td>
+						<div>{{ pointage.name }}</div>
+						<div>{{ pointage.comment }}</div>
+					</td>
 					<td>{{ pointage.start }}</td>
 					<td v-if="pointage.end">{{ pointage.end }}</td>
 					<td v-else>
@@ -77,6 +81,10 @@
 					<n-time-picker placeholder="Départ" :value=" selectedPointage.Départ " :hours=" hours " :minutes=" 15 "
 						format="HH:mm" @update:value=" val => udpateCell('Départ', editPointageRef, val) " />
 				</n-thing>
+				<n-thing description="Commentaire">
+					<n-input placeholder="Commentaire" :value=" selectedPointage.Commentaire "
+						@update:value=" val => udpateCell('Commentaire', editPointageRef, val) " />
+				</n-thing>
 				<n-button type="error" style="width:100%" @click=" deletePointage ">
 					<template #icon>
 						<n-icon>
@@ -90,7 +98,7 @@
 	</n-modal>
 </template>
 <script setup lang="ts">
-import { NTable, NInputGroup, NSelect, NTimePicker, NButton, NDatePicker, NCard, NIcon, NModal, NThing, NSpace } from 'naive-ui'
+import { NTable, NInputGroup, NSelect, NTimePicker, NButton, NDatePicker, NCard, NIcon, NModal, NThing, NSpace, NInput } from 'naive-ui'
 import { Pen, Trash } from '@vicons/fa'
 import useStore from '../stores/store'
 import { Kid, Pointage } from '../interfaces'
@@ -114,6 +122,7 @@ watch(
 	getPointagesToday,
 	{ immediate: true }
 )
+
 
 const kidOptions = computed<{ label: string, value: string }[]>(() => store.kids.map(kidDoc => {
 	const data: Kid = kidDoc.data()
@@ -142,7 +151,8 @@ const list = computed(() => {
 				ref: pointage.ref,
 				id: pointage.id,
 				h,
-				m: m < 0 ? 60 + m : m
+				m: m < 0 ? 60 + m : m,
+				comment: data.Commentaire
 			}
 		})
 })
@@ -151,15 +161,17 @@ const selectedKid = ref<string | null>(null)
 const start = ref<number | null>(null)
 const end = ref<number | null>(null)
 const date = computed(() => dayjs(day.value).startOf('day').toDate())
+const comment = ref('')
 const hours = computed(() => morning.value ? [6, 7, 8, 9, 10, 11, 12] : [13, 14, 15, 16, 17, 18, 19, 20])
 
 const savePointage = async () => {
 	if (selectedKid.value && start.value) {
-		await store.addPointage(selectedKid.value, start.value, end.value, date.value)
+		await store.addPointage(selectedKid.value, start.value, end.value, date.value, comment.value)
 		await getPointagesToday()
 		selectedKid.value = null
 		start.value = null
 		end.value = null
+		comment.value
 	}
 }
 const editModal = ref(false)

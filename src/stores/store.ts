@@ -75,11 +75,12 @@ const useStore = defineStore('store', () => {
     }
     return pointages
   }
-  const addPointage = async (kid: string, start: number, end: number | null, day: Date) => {
+  const addPointage = async (kid: string, start: number, end: number | null, day: Date, comment: string) => {
     const newPointage = {
       Enfant: kid,
       Arrivée: start,
-      Jour: day
+      Jour: day,
+      Commentaire: comment
     }
     if (end) {
       Object.assign(newPointage, { Départ: end })
