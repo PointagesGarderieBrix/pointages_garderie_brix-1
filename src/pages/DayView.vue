@@ -1,5 +1,5 @@
 <template>
-	<div style="min-width: 600px">
+	<div>
 		<n-card>
 			<n-input-group>
 				<n-button @click="changeDay(-1)">-</n-button>
@@ -35,7 +35,7 @@
 			</thead>
 			<tbody>
 				<tr
-					v-for="pointage in                                                                                                                                                                              list                                                                                                                                                                             ">
+					v-for="pointage in                                                                                                                                                                                 list                                                                                                                                                                                ">
 					<td>{{ pointage.name }}</td>
 					<td>{{ pointage.start }}</td>
 					<td v-if="pointage.end">{{ pointage.end }}</td>
