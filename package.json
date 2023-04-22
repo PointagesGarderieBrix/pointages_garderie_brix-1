@@ -1,0 +1,32 @@
+{
+  "name": "pointages-garderie",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vue-tsc && vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "@antfu/eslint-config-vue": "^0.38.5",
+    "dayjs": "^1.11.7",
+    "exceljs": "^4.3.0",
+    "firebase": "^9.20.0",
+    "pinia": "^2.0.35",
+    "vue": "^3.2.47",
+    "vue-router": "^4.1.6"
+  },
+  "devDependencies": {
+    "@antfu/eslint-config": "^0.38.5",
+    "@vicons/fa": "^0.12.0",
+    "@vitejs/plugin-vue": "^4.1.0",
+    "eslint": "^8.39.0",
+    "eslint-plugin-vue": "^9.11.0",
+    "naive-ui": "^2.34.3",
+    "typescript": "^5.0.2",
+    "vite": "^4.3.0",
+    "vite-plugin-pwa": "^0.14.7",
+    "vue-tsc": "^1.2.0"
+  }
+}
