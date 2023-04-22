@@ -34,8 +34,7 @@
 				</tr>
 			</thead>
 			<tbody>
-				<tr
-					v-for="pointage in                                                                                                                                                                                 list                                                                                                                                                                                ">
+				<tr v-for="pointage in     list     ">
 					<td>{{ pointage.name }}</td>
 					<td>{{ pointage.start }}</td>
 					<td v-if="pointage.end">{{ pointage.end }}</td>
@@ -44,8 +43,8 @@
 							format="HH:mm" @update:value="val => udpateCell('Départ', pointage.id, val)" />
 					</td>
 					<td v-if="pointage.Départ">
-						{{ Math.floor(dayjs(pointage.Départ).diff(pointage.Arrivée, 'minutes') / 60) }}h
-						{{ (dayjs(pointage.Départ).minute() - dayjs(pointage.Arrivée).minute()) % 60 }}m
+						{{ pointage.h }}h
+						{{ pointage.m }}m
 					</td>
 					<td v-else></td>
 					<td>
@@ -132,6 +131,8 @@ const list = computed(() => {
 		.map(pointage => {
 			const data: Pointage = pointage.data()
 			const kid = store.kids.find(kid => kid.id === data.Enfant)!.data()
+			const h = Math.floor(dayjs(data.Départ).diff(data.Arrivée, 'minutes') / 60)
+			const m = (dayjs(data.Départ).minute() - dayjs(data.Arrivée).minute()) % 60
 			return {
 				name: `${kid.Nom} ${kid.Prénom}`,
 				Arrivée: data.Arrivée,
@@ -139,7 +140,9 @@ const list = computed(() => {
 				start: dayjs(data.Arrivée).format('HH:mm'),
 				end: data.Départ ? dayjs(data.Départ).format('HH:mm') : null,
 				ref: pointage.ref,
-				id: pointage.id
+				id: pointage.id,
+				h,
+				m: m < 0 ? 60 + m : m
 			}
 		})
 })
