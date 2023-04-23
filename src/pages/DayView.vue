@@ -12,7 +12,7 @@
 		</n-card>
 		<n-card title="Ajouter un pointage">
 			<div style="display:grid;max-width: 300px;place-items: center;margin:auto">
-				<n-select :clearable="true" v-model:value="selectedKid" :options="kidOptions">
+				<n-select :clearable="true" v-model:value="selectedKid" filterable :options="kidOptions">
 				</n-select>
 				<n-input v-model:value="comment" placeholder="Commentaire"></n-input>
 				<n-input-group>
@@ -36,7 +36,7 @@
 			</thead>
 			<tbody>
 				<tr
-					v-for="pointage of                                           list                                          ">
+					v-for="pointage of                                            list                                           ">
 					<td>
 						<div>{{ pointage.name }}</div>
 						<div><n-text depth="3">{{ pointage.comment }}</n-text></div>

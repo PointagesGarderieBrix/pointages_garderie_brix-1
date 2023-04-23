@@ -1,5 +1,5 @@
 <template>
-  <n-config-provider :theme="darkTheme" :locale="frFR" :date-locale="dateFrFR" style="max-width: 700px;margin:0 auto ">
+  <n-config-provider :theme="lightTheme" :locale="frFR" :date-locale="dateFrFR" style="max-width: 700px;margin:0 auto ">
     <n-layout v-if="store.user">
       <n-layout-header>
         <Header></Header>
@@ -12,7 +12,7 @@
 </template>
 
 <script lang="ts" setup>
-import { darkTheme, NConfigProvider, NLayout, NLayoutHeader, frFR, dateFrFR } from 'naive-ui'
+import { lightTheme, NConfigProvider, NLayout, NLayoutHeader, frFR, dateFrFR } from 'naive-ui'
 import useStore from './stores/store';
 import Login from './pages/Login.vue';
 import Header from './Components/Header.vue';
