@@ -35,10 +35,11 @@
 				</tr>
 			</thead>
 			<tbody>
-				<tr v-for="pointage of                                      list                                     ">
+				<tr
+					v-for="pointage of                                           list                                          ">
 					<td>
 						<div>{{ pointage.name }}</div>
-						<div>{{ pointage.comment }}</div>
+						<div><n-text depth="3">{{ pointage.comment }}</n-text></div>
 					</td>
 					<td>{{ pointage.start }}</td>
 					<td v-if="pointage.end">{{ pointage.end }}</td>
@@ -100,7 +101,7 @@
 	</n-modal>
 </template>
 <script setup lang="ts">
-import { NTable, NInputGroup, NSelect, NTimePicker, NButton, NDatePicker, NCard, NIcon, NModal, NThing, NSpace, NInput } from 'naive-ui'
+import { NTable, NInputGroup, NSelect, NTimePicker, NButton, NDatePicker, NCard, NIcon, NModal, NThing, NSpace, NInput, NText } from 'naive-ui'
 import { Pen, Trash } from '@vicons/fa'
 import useStore from '../stores/store'
 import { Kid, Pointage } from '../interfaces'
@@ -166,7 +167,7 @@ const start = ref<number | null>(null)
 const end = ref<number | null>(null)
 const date = computed(() => dayjs(day.value).startOf('day').toDate())
 const comment = ref('')
-const hours = computed(() => morning.value ? [6, 7, 8, 9, 10, 11, 12] : [13, 14, 15, 16, 17, 18, 19, 20])
+const hours = computed(() => morning.value ? [6, 7, 8, 9, 10, 11, 12] : [12, 13, 14, 15, 16, 17, 18, 19, 20])
 
 const savePointage = async () => {
 	if (selectedKid.value && start.value) {

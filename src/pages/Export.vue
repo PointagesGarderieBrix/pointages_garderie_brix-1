@@ -66,9 +66,11 @@ const extract = async (month: number) => {
 		columns: [
 			{ name: 'Nom - Prénom', filterButton: true },
 			{ name: 'Jour', filterButton: true },
+			{ name: 'Matin/AM', filterButton: true },
 			{ name: 'Départ', filterButton: false },
 			{ name: 'Arrivée', filterButton: false },
 			{ name: 'Durée', totalsRowFunction: 'sum', filterButton: false },
+			{ name: 'Commentaire', filterButton: false },
 		],
 		rows: pointages
 			.filter(pointage => {
@@ -83,9 +85,11 @@ const extract = async (month: number) => {
 				return [
 					`${kid.Nom} ${kid.Prénom}`,
 					dayjs(data.Jour.seconds * 1000).format('dddd - D/MM/YYYY'),
+					dayjs(data.Arrivée).hour() < 12 ? 'Matin' : 'Après-midi',
 					dayjs(data.Arrivée).format('HH:mm'),
 					dayjs(data.Départ).format('HH:mm'),
-					durée
+					durée,
+					data.Commentaire ?? ''
 				]
 			}),
 	})
