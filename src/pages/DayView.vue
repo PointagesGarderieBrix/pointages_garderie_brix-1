@@ -35,7 +35,7 @@
 				</tr>
 			</thead>
 			<tbody>
-				<tr v-for="pointage of                   list                  ">
+				<tr v-for="pointage of                                      list                                     ">
 					<td>
 						<div>{{ pointage.name }}</div>
 						<div>{{ pointage.comment }}</div>
@@ -52,7 +52,8 @@
 					</td>
 					<td v-else></td>
 					<td>
-						<n-button @click="editPointageRef = pointage.id; editModal = true">
+						<n-button
+							@click="editPointageRef = pointage.id; selectedPointage = { ...pointage }; editModal = true">
 							<template #icon>
 								<n-icon size="15px">
 									<Pen></Pen>
@@ -69,20 +70,21 @@
 
 			<n-space vertical v-if=" selectedPointage ">
 				<n-thing description="Nom - Prénom">
-					<n-select :clearable=" true " :value=" selectedPointage.Enfant " :options=" kidOptions "
+					<n-select :clearable=" true " v-model:value=" selectedPointage.name " :options=" kidOptions "
 						@update:value=" val => udpateCell('Enfant', editPointageRef, val) " />
 				</n-thing>
 				<n-thing description="Arrivée">
-					<n-time-picker placeholder="Arrivée" :value=" selectedPointage.Arrivée " :hours=" hours "
+					<n-time-picker placeholder="Arrivée" v-model:value=" selectedPointage.Arrivée " :hours=" hours "
 						:minutes=" 15 " format="HH:mm"
 						@update-value=" val => udpateCell('Arrivée', editPointageRef, val) " />
 				</n-thing>
 				<n-thing description="Départ">
-					<n-time-picker placeholder="Départ" :value=" selectedPointage.Départ " :hours=" hours " :minutes=" 15 "
-						format="HH:mm" @update:value=" val => udpateCell('Départ', editPointageRef, val) " />
+					<n-time-picker placeholder="Départ" v-model:value=" selectedPointage.Départ " :hours=" hours "
+						:minutes=" 15 " format="HH:mm"
+						@update:value=" val => udpateCell('Départ', editPointageRef, val) " />
 				</n-thing>
 				<n-thing description="Commentaire">
-					<n-input placeholder="Commentaire" :value=" selectedPointage.Commentaire "
+					<n-input placeholder="Commentaire" v-model:value=" selectedPointage.comment "
 						@update:value=" val => udpateCell('Commentaire', editPointageRef, val) " />
 				</n-thing>
 				<n-button type="error" style="width:100%" @click=" deletePointage ">
@@ -104,7 +106,8 @@ import useStore from '../stores/store'
 import { Kid, Pointage } from '../interfaces'
 import dayjs from 'dayjs'
 import { ref, computed, watch } from 'vue'
-import { DocumentData } from 'firebase/firestore/lite'
+import { DocumentData, DocumentReference } from 'firebase/firestore/lite'
+import { useDebounceFn } from '@vueuse/core'
 const store = useStore()
 const pointages = ref<DocumentData[]>([])
 const day = ref(new Date().getTime())
@@ -122,6 +125,7 @@ watch(
 	getPointagesToday,
 	{ immediate: true }
 )
+
 
 
 const kidOptions = computed<{ label: string, value: string }[]>(() => store.kids.map(kidDoc => {
@@ -177,7 +181,14 @@ const savePointage = async () => {
 const editModal = ref(false)
 const editPointageRef = ref<string | null>(null)
 
-const selectedPointage = computed(() => pointages.value.find(pointage => pointage.id === editPointageRef.value)!.data())
+const selectedPointage = ref<Partial<{
+	name: string
+	Arrivée: number,
+	Départ: number,
+	ref: DocumentReference,
+	id: string,
+	comment: string
+}> | null>(null)
 const deletePointage = async () => {
 	if (editPointageRef.value) {
 		const ref = pointages.value.find(pointage => pointage.id === editPointageRef.value)!.ref
@@ -186,10 +197,10 @@ const deletePointage = async () => {
 		editModal.value = false
 	}
 }
-const udpateCell = async <T extends keyof Pointage>(field: T, id: string | null, value: Pointage[T]) => {
+const udpateCell = useDebounceFn(async <T extends keyof Pointage>(field: T, id: string | null, value: Pointage[T]) => {
 	if (!id) return
 	const ref = pointages.value.find(p => p.id === id)!.ref
 	await store.updatePointage(ref, { [field]: value })
 	getPointagesToday()
-}
+}, 1000)
 </script>
