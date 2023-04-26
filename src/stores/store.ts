@@ -2,7 +2,7 @@ import { defineStore } from 'pinia'
 import { initializeApp } from 'firebase/app';
 import { User, getAuth, signInWithEmailAndPassword } from "firebase/auth";
 import { getFirestore, getDocs, collection, addDoc, deleteDoc, DocumentData, DocumentReference, where, query, and, updateDoc, getDoc } from 'firebase/firestore/lite';
-import { ref } from 'vue';
+import { computed, ref } from 'vue';
 import { Kid } from '../interfaces';
 const useStore = defineStore('store', () => {
 
@@ -38,10 +38,13 @@ const useStore = defineStore('store', () => {
     }
   }
   // ! KIDS
-  const kids = ref<DocumentData[]>([])
+  const kids = computed(() => kidsData.value.sort((a, b) => {
+    return a.data().Nom.localeCompare(b.data().Nom)
+  }))
+  const kidsData = ref<DocumentData[]>([])
   const kidsCollection = collection(db, 'Enfants')
   const getKids = async () => {
-    kids.value = (await getDocs(kidsCollection)).docs
+    kidsData.value = (await getDocs(kidsCollection)).docs
   }
   getKids()
   const addKid = async (lastName: string, firstName: string) => {
