@@ -38,6 +38,11 @@ export default defineConfig({
   ],
   build: {
     target: 'esnext',
+    rollupOptions: {
+      output: {
+        entryFileNames: 'assets/[name].js',
+      },
+    },
   },
   base: '/',
 

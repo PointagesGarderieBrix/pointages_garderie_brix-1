@@ -93,6 +93,40 @@ const extract = async (month: number) => {
 				]
 			}),
 	})
+	const synthese = wb.addWorksheet(`Synthèse par enfant ${monthName}`)
+	synthese.addTable({
+		name: `Synthèse_par_enfant_${monthName}`,
+		ref: 'A1',
+		headerRow: true,
+		totalsRow: true,
+		style: {
+			theme: 'TableStyleDark3',
+			showRowStripes: true,
+		},
+		columns: [
+			{ name: 'Nom - Prénom', filterButton: true },
+			{ name: 'Durée', totalsRowFunction: 'sum', filterButton: false },
+		],
+		rows: pointages
+			.filter(pointage => {
+				const data: Pointage = pointage.data() as Pointage
+				const kid: Kid = store.kids.find(kid => kid.id === data.Enfant) as Kid
+				return kid && data.Départ
+			})
+			.reduce((acc,pointage)=>{
+				const data: Pointage = pointage.data() as Pointage
+				const kid: Kid = store.kids.find(kid => kid.id === data.Enfant)!.data() as Kid
+				const durée = (dayjs(data.Départ).hour() - dayjs(data.Arrivée).hour()) + ((dayjs(data.Départ).minute() - dayjs(data.Arrivée).minute()) / 60)
+				const name = `${kid.Nom} ${kid.Prénom}`
+				const existingRow = acc.find(([n,_])=>n === name)
+				if(existingRow){
+					existingRow[1] += durée
+				}else {
+					acc.push([name,durée])
+				}
+				return acc
+			},[] as Array<[string,number]>)
+	})
 	const buffer = await wb.xlsx.writeBuffer()
 	const blob = new Blob([buffer], { type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" });
 	const link = document.createElement('a')

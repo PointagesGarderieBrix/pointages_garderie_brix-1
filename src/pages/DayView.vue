@@ -10,9 +10,10 @@
 
 			</n-input-group>
 		</n-card>
-		<n-card title="Ajouter un pointage">
+		<n-card :title="`Ajouter un pointage (${list.length} sur cette période)`">
 			<div style="display:grid;max-width: 300px;place-items: center;margin:auto">
-				<n-select :clearable="true" v-model:value="selectedKid" filterable :options="kidOptions">
+				<n-select :clearable="true" v-model:value="selectedKid" filterable :options="kidOptions"
+					:render-label="renderLabel">
 				</n-select>
 				<n-input v-model:value="comment" placeholder="Commentaire"></n-input>
 				<n-input-group>
@@ -35,8 +36,7 @@
 				</tr>
 			</thead>
 			<tbody>
-				<tr
-					v-for="pointage of                                            list                                           ">
+				<tr v-for="pointage of  list ">
 					<td>
 						<div>{{ pointage.name }}</div>
 						<div><n-text depth="3">{{ pointage.comment }}</n-text></div>
@@ -101,12 +101,12 @@
 	</n-modal>
 </template>
 <script setup lang="ts">
-import { NTable, NInputGroup, NSelect, NTimePicker, NButton, NDatePicker, NCard, NIcon, NModal, NThing, NSpace, NInput, NText } from 'naive-ui'
-import { Pen, Trash } from '@vicons/fa'
+import { NTable, NInputGroup, NSelect, NTimePicker, NButton, NDatePicker, NCard, NIcon, NModal, NThing, NSpace, NInput, NText, SelectOption } from 'naive-ui'
+import { Pen, Trash, Check } from '@vicons/fa'
 import useStore from '../stores/store'
 import { Kid, Pointage } from '../interfaces'
 import dayjs from 'dayjs'
-import { ref, computed, watch } from 'vue'
+import { ref, computed, watch, h, VNodeChild } from 'vue'
 import { DocumentData, DocumentReference } from 'firebase/firestore/lite'
 import { useDebounceFn } from '@vueuse/core'
 const store = useStore()
@@ -136,6 +136,27 @@ const kidOptions = computed<{ label: string, value: string }[]>(() => store.kids
 		value: kidDoc.id
 	}
 }))
+const renderLabel = (option: SelectOption): VNodeChild => {
+	if (list.value.some(pointage => pointage.name === option.label)) {
+		return [h(
+			NIcon,
+			{
+				style: {
+					verticalAlign: '-0.15em',
+					marginRight: '4px'
+				}
+			},
+			{
+				default: () => h(Check)
+			}
+		),
+		option.label as string
+		]
+	} else {
+		return [option.label as string]
+	}
+
+}
 
 const list = computed(() => {
 	return pointages.value
@@ -160,6 +181,7 @@ const list = computed(() => {
 				comment: data.Commentaire
 			}
 		})
+		.sort((a, b) => a.name.localeCompare(b.name))
 })
 const morning = ref(new Date().getHours() < 12)
 const selectedKid = ref<string | null>(null)
