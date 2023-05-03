@@ -1,9 +1,10 @@
 import { defineStore } from 'pinia'
 import { initializeApp } from 'firebase/app';
 import { User, getAuth, signInWithEmailAndPassword } from "firebase/auth";
-import { getFirestore, getDocs, collection, addDoc, deleteDoc, DocumentData, DocumentReference, where, query, and, updateDoc, getDoc } from 'firebase/firestore/lite';
+import { getFirestore, getDocs, collection, addDoc, deleteDoc, DocumentData, DocumentReference, where, query, and, updateDoc, getDoc, QueryDocumentSnapshot } from 'firebase/firestore/lite';
 import { computed, ref } from 'vue';
-import { Kid } from '../interfaces';
+import { Kid, Pointage } from '../interfaces';
+import dayjs from 'dayjs';
 const useStore = defineStore('store', () => {
 
   // Import the functions you need from the SDKs you need
@@ -97,8 +98,32 @@ const useStore = defineStore('store', () => {
     await updateDoc(pointageRef, newPointage)
     return await getDoc(pointageRef)
   }
+  const getData = (document: QueryDocumentSnapshot<DocumentData>) => {
+    const data = document.data() as Pointage
+    const kid: Kid = kids.value.find(kid => kid.id === data.Enfant)!.data() as Kid
+    const durée = (dayjs(data.Départ).hour() - dayjs(data.Arrivée).hour()) + ((dayjs(data.Départ).minute() - dayjs(data.Arrivée).minute()) / 60)
+    const duréeRounded = Math.ceil(durée * 2) / 2
+    const jour = dayjs(data.Jour.seconds * 1000).format('dddd - D/MM/YYYY')
+    const AMorPM = dayjs(data.Arrivée).hour() < 12 ? 'Matin' : 'Après-midi'
+    const arrivée = dayjs(data.Arrivée).format('HH:mm')
+    const départ = dayjs(data.Départ).format('HH:mm')
+    const comment = data.Commentaire ?? ''
+    const name = `${kid.Nom} ${kid.Prénom}`
+    return {
+      name,
+      jour,
+      kid,
+      durée,
+      AMorPM,
+      arrivée,
+      départ,
+      comment,
+      duréeRounded
+    }
+  }
   return {
     app,
+    getData,
     signIn,
     kids,
     getKids,

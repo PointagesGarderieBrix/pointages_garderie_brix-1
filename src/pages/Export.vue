@@ -54,6 +54,7 @@ const extract = async (month: number) => {
 	const wb = new Workbook()
 	const monthName = dayjs().month(month).format("MMMM")
 	const ws = wb.addWorksheet(monthName)
+
 	ws.addTable({
 		name: monthName,
 		ref: 'A1',
@@ -79,17 +80,15 @@ const extract = async (month: number) => {
 				return kid && data.Départ
 			})
 			.map(pointage => {
-				const data: Pointage = pointage.data() as Pointage
-				const kid: Kid = store.kids.find(kid => kid.id === data.Enfant)!.data() as Kid
-				const durée = (dayjs(data.Départ).hour() - dayjs(data.Arrivée).hour()) + ((dayjs(data.Départ).minute() - dayjs(data.Arrivée).minute()) / 60)
+				const { name, duréeRounded, jour, AMorPM, arrivée, départ, comment } = store.getData(pointage)
 				return [
-					`${kid.Nom} ${kid.Prénom}`,
-					dayjs(data.Jour.seconds * 1000).format('dddd - D/MM/YYYY'),
-					dayjs(data.Arrivée).hour() < 12 ? 'Matin' : 'Après-midi',
-					dayjs(data.Arrivée).format('HH:mm'),
-					dayjs(data.Départ).format('HH:mm'),
-					durée,
-					data.Commentaire ?? ''
+					name,
+					jour,
+					AMorPM,
+					arrivée,
+					départ,
+					duréeRounded,
+					comment
 				]
 			}),
 	})
@@ -113,19 +112,16 @@ const extract = async (month: number) => {
 				const kid: Kid = store.kids.find(kid => kid.id === data.Enfant) as Kid
 				return kid && data.Départ
 			})
-			.reduce((acc,pointage)=>{
-				const data: Pointage = pointage.data() as Pointage
-				const kid: Kid = store.kids.find(kid => kid.id === data.Enfant)!.data() as Kid
-				const durée = (dayjs(data.Départ).hour() - dayjs(data.Arrivée).hour()) + ((dayjs(data.Départ).minute() - dayjs(data.Arrivée).minute()) / 60)
-				const name = `${kid.Nom} ${kid.Prénom}`
-				const existingRow = acc.find(([n,_])=>n === name)
-				if(existingRow){
-					existingRow[1] += durée
-				}else {
-					acc.push([name,durée])
+			.reduce((acc, pointage) => {
+				const { name, duréeRounded } = store.getData(pointage)
+				const existingRow = acc.find(([n, _]) => n === name)
+				if (existingRow) {
+					existingRow[1] += duréeRounded
+				} else {
+					acc.push([name, duréeRounded])
 				}
 				return acc
-			},[] as Array<[string,number]>)
+			}, [] as Array<[string, number]>)
 	})
 	const buffer = await wb.xlsx.writeBuffer()
 	const blob = new Blob([buffer], { type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" });
