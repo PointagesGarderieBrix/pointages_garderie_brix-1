@@ -17,9 +17,9 @@
 				</n-select>
 				<n-input v-model:value="comment" placeholder="Commentaire"></n-input>
 				<n-input-group>
-					<n-time-picker placeholder="Arrivée" v-model:value="start" :hours="hours" :minutes="15"
+					<n-time-picker placeholder="Arrivée" v-model:value="start" :hours="hours" :minutes="5"
 						format="HH:mm" />
-					<n-time-picker placeholder="Départ" v-model:value="end" :hours="hours" :minutes="15" format="HH:mm" />
+					<n-time-picker placeholder="Départ" v-model:value="end" :hours="hours" :minutes="5" format="HH:mm" />
 					<n-button @click="savePointage" :disabled="!selectedKid || !start">Ok</n-button>
 				</n-input-group>
 			</div>
@@ -44,7 +44,7 @@
 					<td>{{ pointage.start }}</td>
 					<td v-if="pointage.end">{{ pointage.end }}</td>
 					<td v-else>
-						<n-time-picker placeholder="Départ" v-model:value="start" :hours="hours" :minutes="15"
+						<n-time-picker placeholder="Départ" v-model:value="start" :hours="hours" :minutes="5"
 							format="HH:mm" @update:value="val => udpateCell('Départ', pointage.id, val)" />
 					</td>
 					<td v-if="pointage.Départ">
@@ -76,12 +76,12 @@
 				</n-thing>
 				<n-thing description="Arrivée">
 					<n-time-picker placeholder="Arrivée" v-model:value=" selectedPointage.Arrivée " :hours=" hours "
-						:minutes=" 15 " format="HH:mm"
+						:minutes=" 5 " format="HH:mm"
 						@update-value=" val => udpateCell('Arrivée', editPointageRef, val) " />
 				</n-thing>
 				<n-thing description="Départ">
 					<n-time-picker placeholder="Départ" v-model:value=" selectedPointage.Départ " :hours=" hours "
-						:minutes=" 15 " format="HH:mm"
+						:minutes=" 5 " format="HH:mm"
 						@update:value=" val => udpateCell('Départ', editPointageRef, val) " />
 				</n-thing>
 				<n-thing description="Commentaire">
