@@ -189,7 +189,7 @@ const start = ref<number | null>(null)
 const end = ref<number | null>(null)
 const date = computed(() => dayjs(day.value).startOf('day').toDate())
 const comment = ref('')
-const hours = computed(() => morning.value ? [6, 7, 8, 9, 10, 11, 12] : [12, 13, 14, 15, 16, 17, 18, 19, 20])
+const hours = computed(() => morning.value ? [ 7, 8, 9] : [ 16, 17, 18, 19])
 
 const savePointage = async () => {
 	if (selectedKid.value && start.value) {
