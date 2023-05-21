@@ -168,6 +168,16 @@ const list = computed(() => {
 			const kid = store.kids.find(kid => kid.id === data.Enfant)!.data()
 			const h = Math.floor(dayjs(data.Départ).diff(data.Arrivée, 'minutes') / 60)
 			const m = (dayjs(data.Départ).minute() - dayjs(data.Arrivée).minute()) % 60
+			
+			// Code François pour afficher les heures facturées
+			const duree = dayjs(data.Départ) - dayjs(data.Arrivée); 
+  			var heures = Math.floor(duree / (1000 * 60 * 60));
+  			var minutes = Math.floor((duree % (1000 * 60 * 60)) / (1000 * 60));
+			var minutes = Math.ceil(minutes / 30) * 30;
+  			if (minutes === 60) {
+    			heures++;
+    			minutes = 0;
+  			}
 			return {
 				name: `${kid.Nom} ${kid.Prénom}`,
 				Arrivée: data.Arrivée,
@@ -176,8 +186,10 @@ const list = computed(() => {
 				end: data.Départ ? dayjs(data.Départ).format('HH:mm') : null,
 				ref: pointage.ref,
 				id: pointage.id,
-				h,
-				m: m < 0 ? 60 + m : m,
+				//h,
+				//m: m < 0 ? 60 + m : m,
+				heures,
+				minutes,
 				comment: data.Commentaire
 			}
 		})
