@@ -170,13 +170,13 @@ const list = computed(() => {
 			var m = (dayjs(data.Départ).minute() - dayjs(data.Arrivée).minute()) % 60
 			
 			// Code François pour afficher les heures facturées
-			const duree = dayjs(data.Départ) - dayjs(data.Arrivée); 
-  			var h = Math.floor(duree / (1000 * 60 * 60));
-  			var m = Math.floor((duree % (1000 * 60 * 60)) / (1000 * 60));
-			var m = Math.ceil(m / 30) * 30;
+			const duree = dayjs(data.Départ) - dayjs(data.Arrivée) 
+  			var h = Math.floor(duree / (1000 * 60 * 60))
+  			var m = Math.floor((duree % (1000 * 60 * 60)) / (1000 * 60))
+			var m = Math.ceil(m / 30) * 30
   			if (m === 60) {
-    			h++;
-    			m = 0;
+    				h++
+    				m = 0
   			}
 			return {
 				name: `${kid.Nom} ${kid.Prénom}`,
