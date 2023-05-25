@@ -183,7 +183,7 @@ const list = computed(() => {
 				h,
 				m: m<0 ? m+60 : m,
 				comment: data.Commentaire,
-				duréeRounded
+				duréeRounded : data.Départ ? duréeRounded : ''
 			}
 		})
 		.sort((a, b) => a.name.localeCompare(b.name))
