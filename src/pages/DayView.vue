@@ -171,7 +171,7 @@ const list = computed(() => {
 			const kid = store.kids.find(kid => kid.id === data.Enfant)!.data()
 			const h = Math.floor(dayjs(data.Départ).diff(data.Arrivée, 'minutes') / 60)
 			const m = (dayjs(data.Départ).minute() - dayjs(data.Arrivée).minute()) % 60
-			const { duréeRounded } = store.getData(pointage)
+			const { duréeRounded } = store.getData(pointage.data())
 			return {
 				name: `${kid.Nom} ${kid.Prénom}`,
 				Arrivée: data.Arrivée,
