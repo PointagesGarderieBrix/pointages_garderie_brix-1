@@ -31,7 +31,8 @@
 					<th>Enfant</th>
 					<th style="width:1%">Arrivée</th>
 					<th style="width:100px">Départ</th>
-					<th style="width:1%">Durée</th>
+					<th style="width:1%">Durée réelle</th>
+					<th style="width:1%">Durée facturée</th>
 					<th style="width:1%" size="small"></th>
 				</tr>
 			</thead>
@@ -52,6 +53,8 @@
 						{{ pointage.m }}m
 					</td>
 					<td v-else></td>
+					<td> {{ pointage.duréeRounded }} </td>
+
 					<td>
 						<n-button
 							@click="editPointageRef = pointage.id; selectedPointage = { ...pointage }; editModal = true">
@@ -166,11 +169,9 @@ const list = computed(() => {
 		.map(pointage => {
 			const data: Pointage = pointage.data()
 			const kid = store.kids.find(kid => kid.id === data.Enfant)!.data()
-			var h = Math.floor(dayjs(data.Départ).diff(data.Arrivée, 'minutes') / 60)
-			var m = (dayjs(data.Départ).minute() - dayjs(data.Arrivée).minute()) % 60
-			if (m < 0) {
-			m = m + 60
-			}
+			const h = Math.floor(dayjs(data.Départ).diff(data.Arrivée, 'minutes') / 60)
+			const m = (dayjs(data.Départ).minute() - dayjs(data.Arrivée).minute()) % 60
+			const { duréeRounded } = store.getData(pointage)
 			return {
 				name: `${kid.Nom} ${kid.Prénom}`,
 				Arrivée: data.Arrivée,
@@ -179,9 +180,10 @@ const list = computed(() => {
 				end: data.Départ ? dayjs(data.Départ).format('HH:mm') : null,
 				ref: pointage.ref,
 				id: pointage.id,
-				h: m> 30 ? h++ : h,
-				m,
-				comment: data.Commentaire
+				h,
+				m: m<0 ? m+60 : m,
+				comment: data.Commentaire,
+				duréeRounded
 			}
 		})
 		.sort((a, b) => a.name.localeCompare(b.name))
