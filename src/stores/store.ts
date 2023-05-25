@@ -98,7 +98,8 @@ const useStore = defineStore('store', () => {
     await updateDoc(pointageRef, newPointage)
     return await getDoc(pointageRef)
   }
-  const getData = (data: DocumentData) => {
+  const getData = (document: QueryDocumentSnapshot<DocumentData>) => {
+    const data = document.data() as Pointage
     const kid: Kid = kids.value.find(kid => kid.id === data.Enfant)!.data() as Kid
     const durée = (dayjs(data.Départ).hour() - dayjs(data.Arrivée).hour()) + ((dayjs(data.Départ).minute() - dayjs(data.Arrivée).minute()) / 60)
     const duréeRounded = Math.ceil(durée * 2) / 2

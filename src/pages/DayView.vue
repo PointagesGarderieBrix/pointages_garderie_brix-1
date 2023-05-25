@@ -110,10 +110,10 @@ import useStore from '../stores/store'
 import { Kid, Pointage } from '../interfaces'
 import dayjs from 'dayjs'
 import { ref, computed, watch, h, VNodeChild } from 'vue'
-import { DocumentData, DocumentReference } from 'firebase/firestore/lite'
+import { DocumentData, DocumentReference, QueryDocumentSnapshot } from 'firebase/firestore/lite'
 import { useDebounceFn } from '@vueuse/core'
 const store = useStore()
-const pointages = ref<DocumentData[]>([])
+const pointages = ref<QueryDocumentSnapshot<DocumentData>[]>([])
 const day = ref(new Date().getTime())
 const changeDay = (nb: -1 | 1) => {
 	day.value = dayjs(day.value).add(nb, 'day').toDate().getTime()
@@ -167,11 +167,11 @@ const list = computed(() => {
 			return (dayjs(pointage.data().Arrivée).hour() < 12) === morning.value && store.kids.some(kid => pointage.data().Enfant === kid.id)
 		})
 		.map(pointage => {
-			const data: Pointage = pointage.data()
+			const data = pointage.data() as unknown as Pointage
 			const kid = store.kids.find(kid => kid.id === data.Enfant)!.data()
 			const h = Math.floor(dayjs(data.Départ).diff(data.Arrivée, 'minutes') / 60)
 			const m = (dayjs(data.Départ).minute() - dayjs(data.Arrivée).minute()) % 60
-			const { duréeRounded } = store.getData(data)
+			const { duréeRounded } = store.getData(pointage)
 			return {
 				name: `${kid.Nom} ${kid.Prénom}`,
 				Arrivée: data.Arrivée,
