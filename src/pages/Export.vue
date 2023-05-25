@@ -80,7 +80,7 @@ const extract = async (month: number) => {
 				return kid && data.Départ
 			})
 			.map(pointage => {
-				const { name, duréeRounded, jour, AMorPM, arrivée, départ, comment } = store.getData(pointage)
+				const { name, duréeRounded, jour, AMorPM, arrivée, départ, comment } = store.getData(pointage.data())
 				return [
 					name,
 					jour,
