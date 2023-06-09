@@ -17,8 +17,7 @@
 				</n-select>
 				<n-input v-model:value="comment" placeholder="Commentaire"></n-input>
 				<n-input-group>
-					<n-time-picker placeholder="Arrivée" v-model:value="start" :hours="hours" :minutes="5"
-						format="HH:mm" />
+					<n-time-picker placeholder="Arrivée" v-model:value="start" :hours="hours" :minutes="5" format="HH:mm" />
 					<n-time-picker placeholder="Départ" v-model:value="end" :hours="hours" :minutes="5" format="HH:mm" />
 					<n-button @click="savePointage" :disabled="!selectedKid || !start">Ok</n-button>
 				</n-input-group>
@@ -45,8 +44,8 @@
 					<td>{{ pointage.start }}</td>
 					<td v-if="pointage.end">{{ pointage.end }}</td>
 					<td v-else>
-						<n-time-picker placeholder="Départ" v-model:value="start" :hours="hours" :minutes="5"
-							format="HH:mm" @update:value="val => udpateCell('Départ', pointage.id, val)" />
+						<n-time-picker placeholder="Départ" v-model:value="start" :hours="hours" :minutes="5" format="HH:mm"
+							@update:value="val => udpateCell('Départ', pointage.id, val)" />
 					</td>
 					<td v-if="pointage.Départ">
 						{{ pointage.h }}h
@@ -69,29 +68,27 @@
 			</tbody>
 		</n-table>
 	</div>
-	<n-modal v-model:show=" editModal " style="width:fit-content;min-width:300px;min-height: 300px;">
+	<n-modal v-model:show="editModal" style="width:fit-content;min-width:300px;min-height: 300px;">
 		<n-card>
 
-			<n-space vertical v-if=" selectedPointage ">
+			<n-space vertical v-if="selectedPointage">
 				<n-thing description="Nom - Prénom">
-					<n-select :clearable=" true " v-model:value=" selectedPointage.name " :options=" kidOptions "
-						@update:value=" val => udpateCell('Enfant', editPointageRef, val) " />
+					<n-select :clearable="true" v-model:value="selectedPointage.name" :options="kidOptions"
+						@update:value="val => udpateCell('Enfant', editPointageRef, val)" />
 				</n-thing>
 				<n-thing description="Arrivée">
-					<n-time-picker placeholder="Arrivée" v-model:value=" selectedPointage.Arrivée " :hours=" hours "
-						:minutes=" 5 " format="HH:mm"
-						@update-value=" val => udpateCell('Arrivée', editPointageRef, val) " />
+					<n-time-picker placeholder="Arrivée" v-model:value="selectedPointage.Arrivée" :hours="hours"
+						:minutes="5" format="HH:mm" @update-value="val => udpateCell('Arrivée', editPointageRef, val)" />
 				</n-thing>
 				<n-thing description="Départ">
-					<n-time-picker placeholder="Départ" v-model:value=" selectedPointage.Départ " :hours=" hours "
-						:minutes=" 5 " format="HH:mm"
-						@update:value=" val => udpateCell('Départ', editPointageRef, val) " />
+					<n-time-picker placeholder="Départ" v-model:value="selectedPointage.Départ" :hours="hours" :minutes="5"
+						format="HH:mm" @update:value="val => udpateCell('Départ', editPointageRef, val)" />
 				</n-thing>
 				<n-thing description="Commentaire">
-					<n-input placeholder="Commentaire" v-model:value=" selectedPointage.comment "
-						@update:value=" val => udpateCell('Commentaire', editPointageRef, val) " />
+					<n-input placeholder="Commentaire" v-model:value="selectedPointage.comment"
+						@update:value="val => udpateCell('Commentaire', editPointageRef, val)" />
 				</n-thing>
-				<n-button type="error" style="width:100%" @click=" deletePointage ">
+				<n-button type="error" style="width:100%" @click="deletePointage">
 					<template #icon>
 						<n-icon>
 							<Trash />
@@ -181,28 +178,41 @@ const list = computed(() => {
 				ref: pointage.ref,
 				id: pointage.id,
 				h,
-				m: m<0 ? m+60 : m,
+				m: m < 0 ? m + 60 : m,
 				comment: data.Commentaire,
-				duréeRounded : data.Départ ? duréeRounded : ''
+				duréeRounded: data.Départ ? duréeRounded : ''
 			}
 		})
 		.sort((a, b) => a.name.localeCompare(b.name))
 })
 const morning = ref(new Date().getHours() < 12)
 const selectedKid = ref<string | null>(null)
+
+const MORNING_END = 28201000
+const AFTERNOON_START = 55801000
 const start = ref<number | null>(null)
 const end = ref<number | null>(null)
+
 const date = computed(() => dayjs(day.value).startOf('day').toDate())
 const comment = ref('')
-const hours = computed(() => morning.value ? [ 7, 8, 9] : [ 16, 17, 18, 19])
+const hours = computed(() => morning.value ? [7, 8, 9] : [16, 17, 18, 19])
+
+const setDefaultStartAndEnd = () => {
+	start.value = morning.value ? null : AFTERNOON_START
+	end.value = morning.value ? MORNING_END : null
+}
+watch(
+	morning,
+	setDefaultStartAndEnd,
+	{ immediate: true }
+)
 
 const savePointage = async () => {
 	if (selectedKid.value && start.value) {
 		await store.addPointage(selectedKid.value, start.value, end.value, date.value, comment.value)
 		await getPointagesToday()
 		selectedKid.value = null
-		start.value = null
-		end.value = null
+		setDefaultStartAndEnd()
 		comment.value
 	}
 }
