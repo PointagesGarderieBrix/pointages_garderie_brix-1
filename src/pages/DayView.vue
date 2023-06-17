@@ -166,7 +166,8 @@ const list = computed(() => {
 		.map(pointage => {
 			const data = pointage.data() as unknown as Pointage
 			const kid = store.kids.find(kid => kid.id === data.Enfant)!.data()
-			const h = Math.floor(dayjs(data.Départ).diff(data.Arrivée, 'minutes') / 60)
+			
+			const h = dayjs(data.Départ).hour() - dayjs(data.Arrivée).hour()
 			const m = (dayjs(data.Départ).minute() - dayjs(data.Arrivée).minute()) % 60
 			const { duréeRounded } = store.getData(pointage)
 			return {
